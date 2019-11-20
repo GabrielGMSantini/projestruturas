@@ -11,6 +11,11 @@ typedef struct produto{
 	int peso;
 }produto;
 
+
+typedef produto queue_element;
+
+#include "QueueCF.h"
+
 int stoi(string s){
 	int n;
 	char aux[s.length()] ;
@@ -50,7 +55,8 @@ int main() {
   string capacidadestring="                                                                  ";
   int tamanho;
   int capacidade;
-  produto produtos[100];
+  Queue fila;
+  initQueue(fila);
   cout<<"Digite o nome do arquivo onde estao os produtos(este arquivo deve estar contido no projeto criado no Devc++)\n";
   char filename[100];
   cin>>filename;
@@ -70,17 +76,26 @@ int main() {
 	}
 	tamanho = stoi(tamanhoString);
 	capacidade = stoi(capacidadestring);
-	int j =0;
 	while(tamanho>0){
 		getline (myfile,line);
-		produtos[j]=linetoprod(line);
-		cout<<produtos[j].codigo<<" "<<produtos[j].descricao<<" "<<produtos[j].valor<< " "<<produtos[j].peso<<'\n';
-		j++;
+		cout<<line;
+		produto p;
+		p = linetoprod(line);
+		
+		insert(fila,p);
+		
 		tamanho--;
 	}
-	
+	produto x;
+  	while(!isEmptyQ(fila)){
+  	x= eliminate(fila);
+  	cout<<x.codigo<<" "<<x.descricao<<" "<<x.valor<<" "<<x.peso<<"\n";
   }
+  }
+ 
+  		
 	
   else
+  cout<<1111;
 	return 0;
 }

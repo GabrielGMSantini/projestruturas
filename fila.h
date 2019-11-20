@@ -27,13 +27,16 @@ no * novo_no(){
 
 
 
-void Inserir_final(no ** pri,elemento x)
+int Inserir_final(no ** pri,elemento x)
 {
     no*p,*novo;
-    novo=novo_no();
+    novo=new no();
     p=*pri;
     novo->link=NULL;
-    novo->info=x;
+    novo->info.codigo=x.codigo;
+    novo->info.descricao=x.descricao;
+    novo->info.peso=x.peso;
+    novo->info.valor=x.valor;
     if(*pri==NULL)
     {
         *pri=novo;
@@ -46,6 +49,8 @@ void Inserir_final(no ** pri,elemento x)
     p->link=novo;
 
     }
+
+	return 0;
 
 }
 
