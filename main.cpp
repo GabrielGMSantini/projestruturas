@@ -5,12 +5,18 @@
 #include <fstream>
 using namespace std;
 typedef struct produto{
-	string codigo = "      ";
+	string codigo = "     ";
 	string descricao = "                    ";
 	int valor;
 	int peso;
 }produto;
 
+typedef struct {
+	produto prods[100];
+	int valor=0;
+	int peso=0;
+	int n=0;//quantidade de produtos em prods 
+}lista_prod;
 
 typedef produto queue_element;
 
@@ -22,6 +28,38 @@ int stoi(string s){
 	strcpy(aux, s.c_str());
 	sscanf(aux, "%d", &n);
 	return n;
+}
+
+void printqueue(Queue Q){
+	produto x;
+  	while(!isEmptyQ(Q)){
+  		x= eliminate(Q);
+  		cout<<x.codigo<<" "<<x.descricao<<" "<<x.valor<<" "<<x.peso<<"\n";
+  }
+}
+
+void calc_lista(Queue allprods,lista_prod& prod_atual, lista_prod& principal,int capacidade){
+	while(!isEmptyQ(allprods)){
+		produto p = eliminate(allprods);
+		printqueue(allprods);
+		int pesoaux = prod_atual.peso + p.peso;
+		if(pesoaux<capacidade){
+			prod_atual.peso =pesoaux;
+			prod_atual.valor+=p.valor;
+			prod_atual.prods[prod_atual.n] = p;
+			prod_atual.n++;
+			calc_lista(allprods,prod_atual,principal,capacidade);
+		}
+		if(prod_atual.valor > principal.valor)
+			principal = prod_atual;
+		prod_atual.n--;
+		prod_atual.valor-=prod_atual.prods[prod_atual.n].valor;
+		prod_atual.peso-=prod_atual.prods[prod_atual.n].peso;
+		for(int i=0;i<principal.n;i++){
+			cout<<principal.prods[i].descricao<<"\n";
+		}
+	}
+	return;
 }
 
 produto linetoprod(string s){
@@ -50,17 +88,22 @@ produto linetoprod(string s){
 	return p;
 }
 int main() {
+	//Para leitura do arquivo
   string line;
   string tamanhoString="   ";
   string capacidadestring="                                                                  ";
-  int tamanho;
-  int capacidade;
+  int tamanho;//quantos produtos tem no arquivo
+  int capacidade;//qual a capacidade do conteiner
+  
+  //Escolha do arquivo 
   Queue fila;
   initQueue(fila);
   cout<<"Digite o nome do arquivo onde estao os produtos(este arquivo deve estar contido no projeto criado no Devc++)\n";
   char filename[100];
   cin>>filename;
   ifstream myfile (filename);
+  
+  //Pegar o valor do tamanho e da capacidade apartir da string
   if (myfile.is_open())
   {
     getline (myfile,line);
@@ -76,9 +119,10 @@ int main() {
 	}
 	tamanho = stoi(tamanhoString);
 	capacidade = stoi(capacidadestring);
+	
+	//Colocar os produtos do arquivo na fila criada
 	while(tamanho>0){
 		getline (myfile,line);
-		cout<<line;
 		produto p;
 		p = linetoprod(line);
 		
@@ -86,16 +130,19 @@ int main() {
 		
 		tamanho--;
 	}
-	produto x;
-  	while(!isEmptyQ(fila)){
-  	x= eliminate(fila);
-  	cout<<x.codigo<<" "<<x.descricao<<" "<<x.valor<<" "<<x.peso<<"\n";
-  }
+	//printar o conteudo da fila para debugar
+	printqueue(fila);
+	lista_prod atual;
+	lista_prod principal;
+	calc_lista(fila,atual,principal,capacidade);
+	int r;
+	for(r=0;r<principal.n;r++)
+		cout<<principal.prods[r].codigo<<"\n";
   }
  
   		
 	
   else
-  cout<<1111;
+  cout<<"Vish, deu nao...";
 	return 0;
 }
