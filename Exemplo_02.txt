@@ -1,4 +1,4 @@
-7 100
+52 100
 AAAAA, Prod A, 2, 2
 BBBBB, Prod B, 50, 25
 CCCCC, Prod C, 47, 50
