@@ -11,12 +11,7 @@ typedef struct produto{
 	int peso;
 }produto;
 
-typedef struct {
-	produto prods[100];
-	int valor=0;
-	int peso=0;
-	int n=0;//quantidade de produtos em prods 
-}lista_prod;
+
 
 typedef produto queue_element;
 
@@ -40,11 +35,10 @@ void printqueue(Queue Q){
 
 int max(int a, int b) { return (a > b)? a : b; }
 // Returns the maximum value that can be put in a knapsack of capacity W
-int printknapSack(int W, int wt[], int val[], int n,int (&pos)[100]) 
+int calcknapSack(int W, int wt[], int val[], int n,int (&pos)[100]) 
 { 
     int i, w; 
     int K[n + 1][W + 1]; 
-  
     // Build table K[][] in bottom up manner 
     for (i = 0; i <= n; i++) { 
         for (w = 0; w <= W; w++) { 
@@ -60,7 +54,6 @@ int printknapSack(int W, int wt[], int val[], int n,int (&pos)[100])
   
     // stores the result of Knapsack 
     int res = K[n][W];
-    
     int v=0;
     w = W; 
     for (i = n; i > 0 && res > 0; i--) { 
@@ -75,7 +68,7 @@ int printknapSack(int W, int wt[], int val[], int n,int (&pos)[100])
         else { 
   
             // This item is included. 
-           		pos[v] = i - 1;
+           		pos[v]=i-1;
            		v++;
               
             // Since this weight is included its  
@@ -87,68 +80,22 @@ int printknapSack(int W, int wt[], int val[], int n,int (&pos)[100])
 	return v; 
 } 
 
-
-void calc_lista(Queue allprods,lista_prod& prod_atual, lista_prod& principal,int capacidade){
-	while(!isEmptyQ(allprods)){
-		produto p = eliminate(allprods);
-		//printqueue(allprods);
-		int pesoaux = prod_atual.peso + p.peso;
-		if(pesoaux<capacidade){
-			prod_atual.peso =pesoaux;
-			prod_atual.valor+=p.valor;
-			prod_atual.prods[prod_atual.n] = p;
-			prod_atual.n++;
-			calc_lista(allprods,prod_atual,principal,capacidade);
-		}
-		if(prod_atual.valor > principal.valor)
-			principal = prod_atual;
-		prod_atual.n--;
-		prod_atual.valor-=prod_atual.prods[prod_atual.n].valor;
-		prod_atual.peso-=prod_atual.prods[prod_atual.n].peso;
-		
-	}
-	return;
-}
-
-
-
-void quicksort(produto (&P)[100],int first,int last){
-int i, j, pivot;
-produto temp;
-if(first<last){
-pivot=first;
-i=first;
-j=last;
-while(i<j){
-while(P[i].peso<=P[pivot].peso&&i<last)
-i++;
-while(P[j].peso>P[pivot].peso)
-j--;
-if(i<j){
-temp=P[i];
-P[i]=P[j];
-P[j]=temp;
-}
-}
-temp=P[pivot];
-P[pivot]=P[j];
-P[j]=temp;
-quicksort(P,first,j-1);
-quicksort(P,j+1,last);
-}
-}
-
-void ordenar_fila(Queue& Q){
-	produto produtos[100];
-	int i=0;
+int calc_valor(Queue Q){
+	int soma=0;
 	while(!isEmptyQ(Q)){
-		produtos[i]=eliminate(Q);
-		i++;
+		produto Aux = eliminate(Q);
+		soma+=Aux.valor;
 	}
-	quicksort(produtos,0,i);
-	for(;i>0;i--){
-		insert(Q,produtos[i]);
+	return soma;
+}
+
+int calc_peso(Queue Q){
+	int soma=0;
+	while(!isEmptyQ(Q)){
+		produto Aux = eliminate(Q);
+		soma+=Aux.peso;
 	}
+	return soma;
 }
 
 produto linetoprod(string s){
@@ -219,31 +166,20 @@ int main() {
 		getline (myfile,line);
 		produto p;
 		p = linetoprod(line);
-		w[tamanho-1]=p.peso;
-		v[tamanho-1]=p.valor;
+		w[i]=p.peso;
+		v[i]=p.valor;
 		prods[i]=p;
 		i++;
 		tamanho--;
 	}
 	
-	int x = printknapSack(capacidade,w,v,n,pos);
+	int x = calcknapSack(capacidade,w,v,n,pos);
 	for(;x>0;x--){
 		insert(fila,prods[pos[x-1]]);
 	}
-	//printar o conteudo da fila para debugar
-    //ordenar_fila(fila);
 	printqueue(fila);
-	//lista_prod atual;
-	//lista_prod principal;
-	//calc_lista(fila,atual,principal,capacidade);
-	//int r;
-	//for(r=0;r<principal.n;r++)
-	//	cout<<principal.prods[r].codigo<<"\n";
-	
-  }
- 
-  		
-	
+	cout<<"\n\n\tValor Total: USD "<<calc_valor(fila)<<"\n\tPeso Total: "<<calc_peso(fila)<<"g\n\n";
+  }	
   else
   cout<<"Vish, deu nao...";
 	return 0;
