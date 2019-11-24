@@ -29,7 +29,8 @@ void printqueue(Queue Q){
 	produto x;
   	while(!isEmptyQ(Q)){
   		x= eliminate(Q);
-  		cout<<x.codigo<<" "<<x.descricao<<" "<<x.valor<<" "<<x.peso<<"\n";
+  		cout<<x.codigo<<"  "<<x.descricao;
+  		printf("%-6d%-6d\n",x.valor,x.peso);
   }
 }
 
@@ -186,6 +187,7 @@ int main() {
 		insert(fila,prods[pos[x-1]]);
 	}
 	system("cls");
+	cout<<"Produtos Escolhido:\nCod\tDescricao\t   Valor Peso\n";
 	printqueue(fila);
 	cout<<"\n\n\tValor Total: USD "<<calc_valor(fila)<<"\n\tPeso Total: "<<calc_peso(fila)<<"g\n\n";
   }	
