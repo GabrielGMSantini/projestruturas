@@ -38,7 +38,9 @@ int max(int a, int b) { return (a > b)? a : b; }
 int calcknapSack(int W, int wt[], int val[], int n,int (&pos)[100]) 
 { 
     int i, w; 
-    int K[n + 1][W + 1]; 
+   int** K = new int*[n+1];
+		for(int m = 0; m < n+1; m++)
+    		K[m] = new int[W+1];	
     // Build table K[][] in bottom up manner 
     for (i = 0; i <= n; i++) { 
         for (w = 0; w <= W; w++) { 
@@ -51,7 +53,13 @@ int calcknapSack(int W, int wt[], int val[], int n,int (&pos)[100])
                 K[i][w] = K[i - 1][w]; 
         } 
     } 
-  
+//  	 for (int d = 0; d <= n; d++) { 
+//        for (int e = 0; e <= W; e++) { 
+//            cout<<K[d][e]<<" ";
+//    	}
+//    	cout<<"\n";
+//    } 
+//    system("pause");
     // stores the result of Knapsack 
     int res = K[n][W];
     int v=0;
