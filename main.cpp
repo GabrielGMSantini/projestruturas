@@ -177,6 +177,7 @@ int main() {
 	for(;x>0;x--){
 		insert(fila,prods[pos[x-1]]);
 	}
+	system("cls");
 	printqueue(fila);
 	cout<<"\n\n\tValor Total: USD "<<calc_valor(fila)<<"\n\tPeso Total: "<<calc_peso(fila)<<"g\n\n";
   }	
